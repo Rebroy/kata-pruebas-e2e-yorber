@@ -1,0 +1,99 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.11.2'
+}
+
+group = 'com.orangehrm'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    seleniumVersion = '4.15.0'
+    testngVersion = '7.8.0'
+    allureVersion = '2.24.0'
+    aspectjVersion = '1.9.20'
+    webdriverManagerVersion = '5.6.2'
+}
+
+dependencies {
+    // Selenium
+    implementation "org.seleniumhq.selenium:selenium-java:4.25.0"
+
+    // TestNG
+    testImplementation "org.testng:testng:7.10.2"
+
+    // Allure (actualizado y correcto)
+    implementation "io.qameta.allure:allure-java-commons:2.27.0"
+    testImplementation "io.qameta.allure:allure-testng:2.27.0"
+
+    // WebDriverManager
+    implementation "io.github.bonigarcia:webdrivermanager:5.9.2"
+
+    // Logging
+    implementation 'org.slf4j:slf4j-simple:2.0.12'
+
+    // Apache Commons IO
+    implementation 'commons-io:commons-io:2.16.1'
+}
+
+
+
+allure {
+    version = allureVersion
+    autoconfigure = true
+
+    adapter {
+        aspectjWeaver = true
+        frameworks {
+            testng {
+                enabled = true
+            }
+        }
+    }
+}
+
+test {
+    useTestNG {
+        suites 'src/test/resources/testng.xml'
+        useDefaultListeners = true
+    }
+
+    systemProperties = [
+            'allure.results.directory': 'build/allure-results'
+    ]
+
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+        showStandardStreams = false
+    }
+}
+
+tasks.register('cleanAllureResults', Delete) {
+    delete 'build/allure-results'
+}
+
+tasks.register('runTestsWithReport', Test) {
+    dependsOn 'cleanAllureResults'
+    finalizedBy 'allureReport'
+}
+
+tasks.register('openAllureReport', Exec) {
+    dependsOn 'allureReport'
+    commandLine 'allure', 'open', 'build/allure-report'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+wrapper {
+    gradleVersion = '8.4'
+    distributionType = Wrapper.DistributionType.ALL
+}
