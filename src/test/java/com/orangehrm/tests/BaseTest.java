@@ -1,13 +1,12 @@
 package com.orangehrm.tests;
 
-import com.orangehrm.utils.AllureManager;
 import com.orangehrm.utils.ConfigReader;
 import com.orangehrm.utils.DriverManager;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.WebDriver;
-import org.testng.ITestResult;
 import org.testng.annotations.*;
 
+@Listeners(com.orangehrm.listeners.TestListener.class)
 public class BaseTest {
     protected WebDriver driver;
 
@@ -21,16 +20,8 @@ public class BaseTest {
         driver.get(ConfigReader.getProperty("url"));
     }
 
-    @AfterMethod
-    public void tearDown(ITestResult result) {
-        if (result.getStatus() == ITestResult.FAILURE) {
-            Allure.step("Test failed - Taking screenshot");
-            AllureManager.takeScreenshot(driver);
-            AllureManager.attachLog("Test failed: " + result.getThrowable().getMessage());
-        } else if (result.getStatus() == ITestResult.SUCCESS) {
-            Allure.step("Test passed successfully");
-        }
-
+    @AfterMethod(alwaysRun = true)
+    public void tearDown() {
         DriverManager.quitDriver();
     }
 }
