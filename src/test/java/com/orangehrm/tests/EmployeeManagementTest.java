@@ -44,14 +44,12 @@ public class EmployeeManagementTest extends BaseTest {
         DashboardPage dashboardPage = loginPage.login(username, password);
         Assert.assertTrue(dashboardPage.isDashboardDisplayed(),
                 "Dashboard should be displayed after login");
-        AllureManager.takeScreenshot(driver);
-
+        
         // 2. Navegar al módulo PIM
         Allure.step("Step 2: Navigate to PIM module");
         PIMPage pimPage = dashboardPage.navigateToPIM();
         Assert.assertTrue(pimPage.isPIMPageDisplayed(),
                 "PIM page should be displayed");
-        AllureManager.takeScreenshot(driver);
 
         // 3. Agregar nuevo empleado con información básica
         Allure.step("Step 3: Add new employee with basic information");
