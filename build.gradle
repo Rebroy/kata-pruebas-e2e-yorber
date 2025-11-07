@@ -14,26 +14,29 @@ repositories {
 }
 
 ext {
-    seleniumVersion = '4.15.0'
-    testngVersion = '7.8.0'
-    allureVersion = '2.24.0'
-    aspectjVersion = '1.9.20'
-    webdriverManagerVersion = '5.6.2'
+    seleniumVersion = '4.25.0'
+    testngVersion = '7.10.2'
+    allureVersion = '2.27.0'
+    webdriverManagerVersion = '5.9.2'
 }
 
 dependencies {
     // Selenium
-    implementation "org.seleniumhq.selenium:selenium-java:4.25.0"
+    implementation "org.seleniumhq.selenium:selenium-java:${seleniumVersion}"
 
     // TestNG
-    testImplementation "org.testng:testng:7.10.2"
+    testImplementation "org.testng:testng:${testngVersion}"
 
-    // Allure (actualizado y correcto)
-    implementation "io.qameta.allure:allure-java-commons:2.27.0"
-    testImplementation "io.qameta.allure:allure-testng:2.27.0"
+    // ✅ Allure (solo testImplementation)
+    testImplementation "io.qameta.allure:allure-testng:${allureVersion}"
+    testImplementation "io.qameta.allure:allure-java-commons:${allureVersion}"
+    testImplementation "io.qameta.allure:allure-selenide:${allureVersion}"
+    implementation "io.qameta.allure:allure-testng:${allureVersion}"
+    implementation "io.qameta.allure:allure-java-commons:${allureVersion}"
+    implementation "io.qameta.allure:allure-selenide:${allureVersion}"
 
     // WebDriverManager
-    implementation "io.github.bonigarcia:webdrivermanager:5.9.2"
+    implementation "io.github.bonigarcia:webdrivermanager:${webdriverManagerVersion}"
 
     // Logging
     implementation 'org.slf4j:slf4j-simple:2.0.12'
@@ -42,36 +45,24 @@ dependencies {
     implementation 'commons-io:commons-io:2.16.1'
 }
 
-
-
 allure {
     version = allureVersion
-    autoconfigure = true
-
-    adapter {
-        aspectjWeaver = true
-        frameworks {
-            testng {
-                enabled = true
-            }
-        }
+    useTestNG {
+        version = allureVersion
     }
 }
 
 test {
     useTestNG {
         suites 'src/test/resources/testng.xml'
-        useDefaultListeners = true
+        useDefaultListeners = false
     }
 
-    systemProperties = [
-            'allure.results.directory': 'build/allure-results'
-    ]
+    systemProperty "allure.results.directory", "build/allure-results"
 
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
-        showStandardStreams = false
     }
 }
 

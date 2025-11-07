@@ -44,14 +44,12 @@ public class EmployeeManagementTest extends BaseTest {
         DashboardPage dashboardPage = loginPage.login(username, password);
         Assert.assertTrue(dashboardPage.isDashboardDisplayed(),
                 "Dashboard should be displayed after login");
-        AllureManager.takeScreenshot(driver);
-
+        
         // 2. Navegar al módulo PIM
         Allure.step("Step 2: Navigate to PIM module");
         PIMPage pimPage = dashboardPage.navigateToPIM();
         Assert.assertTrue(pimPage.isPIMPageDisplayed(),
                 "PIM page should be displayed");
-        AllureManager.takeScreenshot(driver);
 
         // 3. Agregar nuevo empleado con información básica
         Allure.step("Step 3: Add new employee with basic information");
@@ -73,7 +71,7 @@ public class EmployeeManagementTest extends BaseTest {
                 "Personal Details page should be displayed after saving employee");
         AllureManager.attachLog("Employee created with ID: " + employeeId);
         AllureManager.attachLog("Employee Name: " + firstName + " " + middleName + " " + lastName);
-        AllureManager.takeScreenshot(driver);
+
 
         // 4. Navegar al módulo Directory
         Allure.step("Step 4: Navigate to Directory module");
@@ -82,7 +80,7 @@ public class EmployeeManagementTest extends BaseTest {
 
         Assert.assertTrue(directoryPage.isDirectoryPageDisplayed(),
                 "Directory page should be displayed");
-        AllureManager.takeScreenshot(driver);
+
 
         // 5. Buscar empleado por nombre
         Allure.step("Step 5: Search for employee by name");
@@ -90,7 +88,7 @@ public class EmployeeManagementTest extends BaseTest {
         directoryPage.searchEmployeeByName(lastName);
 
         AllureManager.attachLog("Searching for employee: " + searchName);
-        AllureManager.takeScreenshot(driver);
+
 
         // 6. Validar que la información del empleado se guardó correctamente
         Allure.step("Step 6: Validate employee information in Directory");
@@ -113,32 +111,4 @@ public class EmployeeManagementTest extends BaseTest {
         AllureManager.takeScreenshot(driver);
         AllureManager.attachLog("Employee management flow completed successfully!");
     }
-
-   /* @Test(priority = 2, description = "Add employee without photo")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Test to verify employee can be added without uploading a photo")
-    @Story("Add Employee")
-    public void testAddEmployeeWithoutPhoto() {
-        // Generar datos únicos
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss"));
-        String empFirstName = "Maria";
-        String empMiddleName = "Isabel";
-        String empLastName = "Rodriguez" + timestamp;
-
-        // Login
-        LoginPage loginPage = new LoginPage(driver);
-        DashboardPage dashboardPage = loginPage.login(
-                ConfigReader.getProperty("username"),
-                ConfigReader.getProperty("password")
-        );
-
-        // Navegar a PIM y agregar empleado sin foto
-        PIMPage pimPage = dashboardPage.navigateToPIM();
-        String newEmployeeId = pimPage.addEmployee(empFirstName, empMiddleName, empLastName, null);
-
-        Assert.assertTrue(pimPage.isPersonalDetailsDisplayed(),
-                "Employee should be created successfully without photo");
-        AllureManager.attachLog("Employee created without photo - ID: " + newEmployeeId);
-        AllureManager.takeScreenshot(driver);
-    }*/
 }

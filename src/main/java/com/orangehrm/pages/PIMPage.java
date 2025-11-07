@@ -106,7 +106,7 @@ public class PIMPage extends BasePage {
             );
 
             fileInput.sendKeys(new File(photoPath).getAbsolutePath());
-            System.out.println("📸 Foto cargada correctamente sin usar el diálogo del sistema");
+            System.out.println("Foto cargada correctamente sin usar el diálogo del sistema");
 Thread.sleep(5000);
         } catch (Exception e) {
             throw new RuntimeException("Error uploading employee photo", e);
